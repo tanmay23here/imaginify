@@ -3,28 +3,29 @@ import mongoose, { Mongoose } from "mongoose";
 const MONGODB_URL = process.env.MONGODB_URL;
 
 interface MongooseConnection {
-  connection: Mongoose | null;
+  conn: Mongoose | null;
   promise: Promise<Mongoose> | null;
 }
 
 let cached: MongooseConnection = (global as any).mongoose;
 
 if (!cached) {
-  cached = (global as any).mongoose = {
-    connection: null,
-    promise: null,
-  };
+  cached = (global as any).mongoose = { conn: null, promise: null };
 }
 
-export const connectToDatabase = async () => {
-  if (cached.connection) return cached.connection;
-  if (!MONGODB_URL) throw new Error("Missing MONGODB_URL");
+export async function connectToDatabase(): Promise<Mongoose> {
+  if (cached.conn) return cached.conn;
+
+  if (!MONGODB_URL) throw new Error("Missing MongoDB URL");
+
   cached.promise =
     cached.promise ||
     mongoose.connect(MONGODB_URL, {
       dbName: "imaginify",
       bufferCommands: false,
     });
-  cached.connection = await cached.promise;
-  return cached.connection;
-};
+
+  cached.conn = await cached.promise;
+
+  return cached.conn;
+}
