@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 import { Webhook } from "svix";
 
 import { createUser, deleteUser, updateUser } from "@/lib/actions/user.actions";
+import { Console } from "console";
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
@@ -72,7 +73,7 @@ export async function POST(req: Request) {
     };
 
     console.log(user);
-    
+
     const newUser = await createUser(user);
 
     // Set public metadata
@@ -98,6 +99,8 @@ export async function POST(req: Request) {
       photo: image_url,
     };
 
+    console.log(user);
+
     const updatedUser = await updateUser(id, user);
 
     return NextResponse.json({ message: "OK", user: updatedUser });
@@ -109,8 +112,11 @@ export async function POST(req: Request) {
 
     const deletedUser = await deleteUser(id!);
 
+    console.log(deletedUser);
+    
     return NextResponse.json({ message: "OK", user: deletedUser });
   }
+
   // TODO END CHANGES
 
   return new Response("", { status: 200 });
