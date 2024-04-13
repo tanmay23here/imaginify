@@ -39,8 +39,7 @@ const Home = async ({ searchParams }: SearchParamProps) => {
           hasSearch={true}
           images={images?.data}
           totalPages={images?.totalPages}
-          page={page}
-        />
+          page={page} title={""}        />
       </section>
     </>
   );
